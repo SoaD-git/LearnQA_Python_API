@@ -36,5 +36,5 @@ for password in passwords:
     cookies = response.cookies
     response = requests.post("https://playground.learnqa.ru/ajax/api/check_auth_cookie", cookies=cookies)
     if response.text == "You are authorized":
-        print(f"You are authorized, ваш пароль '{password}'")
+        print(f"You are authorized, ваш пароль: {password}")
         break
