@@ -18,9 +18,6 @@ print(response.text)
 # но сервер отвечает так, словно все ок. Или же наоборот, когда типы совпадают, но сервер считает, что это не так.
 
 method = ["GET", "POST", "PUT", "DELETE"]
-headers = {
-  'Content-Type': 'application/json'
-}
 
 for i in method:
     for j in method:
