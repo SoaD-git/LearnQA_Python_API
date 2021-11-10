@@ -1,31 +1,16 @@
 import requests
+from bs4 import BeautifulSoup
 
-passwords = ["123456",
-             "123456789",
-             "qwerty",
-             "password",
-             "1234567",
-             "12345678",
-             "12345",
-             "iloveyou",
-             "111111",
-             "123123",
-             "abc123",
-             "qwerty123",
-             "1q2w3e4r",
-             "admin",
-             "qwertyuiop",
-             "654321",
-             "555555",
-             "lovely",
-             "7777777",
-             "welcome",
-             "888888",
-             "princess",
-             "dragon",
-             "password1",
-             "123qwe"]
-
+wikipage = requests.get("https://en.wikipedia.org/wiki/List_of_the_most_common_passwords").text
+page_data = BeautifulSoup(wikipage, "lxml")
+passwords = []
+rows = page_data.select("#mw-content-text > div.mw-parser-output > table:nth-child(10) > tbody > tr")
+for row in rows:
+    columns = row.select('td')
+    try:
+        passwords.append(columns[-1].text.strip())
+    except IndexError:
+        continue
 
 for password in passwords:
     data = {
