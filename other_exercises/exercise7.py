@@ -22,9 +22,9 @@ method = ["GET", "POST", "PUT", "DELETE"]
 for i in method:
     for j in method:
         if i == "GET":
-            response = requests.request(method=i, url="https://playground.learnqa.ru/ajax/api/compare_query_type", params={"method": f"{j}"}, headers=headers)
+            response = requests.request(method=i, url="https://playground.learnqa.ru/ajax/api/compare_query_type", params={"method": f"{j}"})
             print(i, j, response.text)
         else:
-            response = requests.request(method=i, url="https://playground.learnqa.ru/ajax/api/compare_query_type", data={"method": f"{j}"}, headers=headers)
+            response = requests.request(method=i, url="https://playground.learnqa.ru/ajax/api/compare_query_type", data={"method": f"{j}"})
             print(i, j, response.text)
 
