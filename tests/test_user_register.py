@@ -20,4 +20,5 @@ class TestUserRegister(BaseCase):
         response = MyRequests.post("/user/", data=data)
 
         Assertions.assert_code_status(response, 400)
-        assert response.content.decode("utf-8") == f"Users with email '{email}' already exists", f"Unexpected response content {response.content}"
+        assert response.content.decode("utf-8") == f"Users with email '{email}' already exists",\
+            f"Unexpected response content {response.content}"
