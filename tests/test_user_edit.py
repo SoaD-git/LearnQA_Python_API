@@ -75,6 +75,49 @@ class TestUserEdit(BaseCase):
         Assertions.assert_code_status(response2, 400)
         assert response2.text == "Auth token not supplied", f"Unexpected response text {response2.content}"
 
+    def test_edit_user_authorise_other_user(self):
+        # REGISTER USER 1
+        register_data = self.prepare_registration_data()
+        response1 = MyRequests.post("/user/", data=register_data)
+
+        Assertions.assert_code_status(response1, 200)
+        Assertions.assert_json_has_key(response1, "id")
+
+        first_user_id = self.get_json_value(response1, "id")
+
+        # REGISTER USER 2
+        register_data = self.prepare_registration_data()
+        response2 = MyRequests.post("/user/", data=register_data)
+
+        Assertions.assert_code_status(response2, 200)
+        Assertions.assert_json_has_key(response2, "id")
+
+        email = register_data["email"]
+        password = register_data["password"]
+
+        # LOGIN USER 2
+        login_data = {
+            "email": email,
+            "password": password
+        }
+        response3 = MyRequests.post("/user/login", data=login_data)
+
+        auth_sid = self.get_cookie(response3, "auth_sid")
+        token = self.get_header(response3, "x-csrf-token")
+
+        # EDIT
+        new_email = "some_useremail@example.com"
+        response3 = MyRequests.put(
+            f"/user/{first_user_id}",
+            headers={"x-csrf-token": token},
+            cookies={"auth_sid": auth_sid},
+            data={"email": new_email}
+        )
+        Assertions.assert_code_status(response3, 400)
+        assert response3.content.decode("utf-8") == f"Invalid email format", \
+            f"Invalide email '{email}' is valid"
+
+
     def test_edit_email_without_at_by_same_user(self):
 
         # REGISTER
@@ -111,7 +154,7 @@ class TestUserEdit(BaseCase):
         assert response3.content.decode("utf-8") == f"Invalid email format", \
             f"Invalide email '{email}' is valid"
 
-    def test_edit_username_with_one_symbol_by_same_user(self):
+    def test_edit_firstname_with_one_symbol_by_same_user(self):
 
         # REGISTER
         register_data = self.prepare_registration_data()
@@ -136,13 +179,13 @@ class TestUserEdit(BaseCase):
         token = self.get_header(response2, "x-csrf-token")
 
         # EDIT
-        new_username = "".join(random.choice(string.ascii_lowercase) for i in range(1))
+        new_firstname = "".join(random.choice(string.ascii_lowercase) for i in range(1))
         response3 = MyRequests.put(
             f"/user/{user_id}",
             headers={"x-csrf-token": token},
             cookies={"auth_sid": auth_sid},
-            data={"username": new_username}
+            data={"firstName": new_firstname}
         )
         Assertions.assert_code_status(response3, 400)
-        assert json.loads(response3.content.decode("utf-8"))["error"] == "Too short value for field username", \
+        assert json.loads(response3.content.decode("utf-8"))["error"] == "Too short value for field firstName", \
             f"Unexpected response content {response3.content}"
