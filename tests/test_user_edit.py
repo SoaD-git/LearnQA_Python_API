@@ -1,14 +1,18 @@
 import json
 import random
 import string
-
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 from lib.my_requests import MyRequests
+import allure
 
 
+@allure.epic("User edit cases")
 class TestUserEdit(BaseCase):
-    def test_edit_just_created_user(self):
+
+    @allure.description("This test successfully change name of new user")
+    @allure.severity(allure.severity_level.BLOCKER)
+    def test_edit_name_just_created_user(self):
         # REGISTER
         register_data = self.prepare_registration_data()
         response1 = MyRequests.post("/user/", data=register_data)
@@ -55,6 +59,8 @@ class TestUserEdit(BaseCase):
             "Wrong name of the user after edit"
         )
 
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.description("This test trying to edit user name without authorize")
     def test_edit_not_authorise_user(self):
 
         # REGISTER
@@ -75,6 +81,8 @@ class TestUserEdit(BaseCase):
         Assertions.assert_code_status(response2, 400)
         assert response2.text == "Auth token not supplied", f"Unexpected response text {response2.content}"
 
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.description("This test trying to edit user email that is not same than authorize user")
     def test_edit_user_authorize_other_user(self):
         # REGISTER USER 1
         register_data = self.prepare_registration_data()
@@ -117,7 +125,8 @@ class TestUserEdit(BaseCase):
         assert response3.content.decode("utf-8") == f"Invalid email format", \
             f"Invalide email '{email}' is valid"
 
-
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.description("This test trying to edit user email without @")
     def test_edit_email_without_at_by_same_user(self):
 
         # REGISTER
@@ -154,6 +163,8 @@ class TestUserEdit(BaseCase):
         assert response3.content.decode("utf-8") == f"Invalid email format", \
             f"Invalide email '{email}' is valid"
 
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.description("This test trying to edit user firstname with 1 symbol")
     def test_edit_firstname_with_one_symbol_by_same_user(self):
 
         # REGISTER
