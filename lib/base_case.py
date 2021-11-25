@@ -30,6 +30,7 @@ class BaseCase:
             domain = "example.com"
             random_part = datetime.now().strftime("%m%d%Y%H%M%S")
             email = f"{base_part}{random_part}@{domain}"
+
         current_username = "learnqa"
         if username_len is not None:
             current_username = "".join(random.choice(string.ascii_lowercase) for i in range(username_len))

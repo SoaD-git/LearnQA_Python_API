@@ -9,8 +9,6 @@ from lib.assertions import Assertions
 
 class TestUserRegister(BaseCase):
 
-    exclude_params = [("username"), ("firstName"), ("lastName"), ("email"), ("password")]
-
     def test_create_user_successfully(self):
         data = self.prepare_registration_data()
 
@@ -38,6 +36,8 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 400)
         assert response.content.decode("utf-8") == f"Invalid email format",\
             f"email '{email}' is invalid"
+
+    exclude_params = [("username"), ("firstName"), ("lastName"), ("email"), ("password")]
 
     @pytest.mark.parametrize("condition", exclude_params)
     def test_create_user_without_some_user_params(self, condition):
