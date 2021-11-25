@@ -35,7 +35,7 @@ class TestUserRegister(BaseCase):
 
         Assertions.assert_code_status(response, 400)
         assert response.content.decode("utf-8") == f"Invalid email format",\
-            f"email '{email}' is invalid"
+            f"Invalide email '{email}' is valid"
 
     exclude_params = [("username"), ("firstName"), ("lastName"), ("email"), ("password")]
 
