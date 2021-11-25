@@ -75,7 +75,7 @@ class TestUserEdit(BaseCase):
         Assertions.assert_code_status(response2, 400)
         assert response2.text == "Auth token not supplied", f"Unexpected response text {response2.content}"
 
-    def test_edit_user_authorise_other_user(self):
+    def test_edit_user_authorize_other_user(self):
         # REGISTER USER 1
         register_data = self.prepare_registration_data()
         response1 = MyRequests.post("/user/", data=register_data)
